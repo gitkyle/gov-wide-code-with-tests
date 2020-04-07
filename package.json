@@ -1,0 +1,27 @@
+{
+  "name": "digital-analytics-program",
+  "version": "4.0.0",
+  "description": "Provides a JavaScript file for US federal agencies to link or embed in their websites to participate in the Digital Analytics Program.",
+  "main": "Universal-Federated-Analytics.js",
+  "scripts": {
+    "compile": "ncc -e build DAP-base.js -o dist/index.js",
+    "build": "browserify Universal-Federated-Analytics.base.js > Universal-Federated-Analytics.js && minify Universal-Federated-Analytics.js -o Universal-Federated-Analytics.min.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digital-analytics-program/gov-wide-code.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/digital-analytics-program/gov-wide-code/issues"
+  },
+  "homepage": "https://github.com/digital-analytics-program/gov-wide-code#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "browserify": "^16.5.1",
+    "jest": "^24.9.0",
+    "jsdom": "^16.2.1",
+    "minify": "^5.1.1"
+  }
+}
