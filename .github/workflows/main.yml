@@ -33,6 +33,7 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${GITHUB_REF#refs/heads/}  
+        force: true
     - name: Run unit tests
       run: npm test
     
