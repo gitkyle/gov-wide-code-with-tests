@@ -27,13 +27,12 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git commit -m "Add changes" -a
+        git commit -m "Adding changes from CI" -a  || echo "Nothing to update"
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${GITHUB_REF#refs/heads/}  
-        force: true
+        branch: ${GITHUB_REF#refs/heads/}
     - name: Run unit tests
       run: npm test
     
