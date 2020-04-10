@@ -25,7 +25,7 @@ window['gas'] = gas;
 
 },{"./Universal-Federated-Analytics.lib.js":2}],2:[function(require,module,exports){
 /*
- * oConfig holds all settings with default values.
+ * oConfig holds all settings with default values
  * Most of the settings can be changed by passing a new value
  * in the query string when referencing this file.
  */

@@ -1,5 +1,5 @@
 /*
- * oConfig holds all settings with default values.
+ * oConfig holds all settings with default values
  * Most of the settings can be changed by passing a new value
  * in the query string when referencing this file.
  */
@@ -97,7 +97,7 @@ function _defineCookieDomain() {
       oCONFIG.COOKIE_DOMAIN = location.hostname.match(
         /(([^.\/]+\.[^.\/]{2,3}\.[^.\/]{2})|(([^.\/]+\.)[^.\/]{2,4}))(\/.*)?$/
       )[1];
-      oCONFIG.SUBDOMAIN_BASED = true;
+      oCONFIG.SUBDOMAIN_BASED = false;
     } else {
       oCONFIG.COOKIE_DOMAIN = location.hostname.toLowerCase().replace('www.', '');
       oCONFIG.SUBDOMAIN_BASED = false;
