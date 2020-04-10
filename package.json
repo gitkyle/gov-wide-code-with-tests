@@ -4,7 +4,8 @@
   "description": "Provides a JavaScript file for US federal agencies to link or embed in their websites to participate in the Digital Analytics Program.",
   "main": "Universal-Federated-Analytics.js",
   "scripts": {
-    "build": "browserify ./Universal-Federated-Analytics.base.js > ./Universal-Federated-Analytics.js && minify ./Universal-Federated-Analytics.js -o ./Universal-Federated-Analytics.min.js",
+    "build": "browserify ./Universal-Federated-Analytics.base.js > ./Universal-Federated-Analytics.js",
+    "minify": "minify ./Universal-Federated-Analytics.js > ./Universal-Federated-Analytics.min.js",
     "test": "jest"
   },
   "repository": {
