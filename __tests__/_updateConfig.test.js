@@ -3,8 +3,6 @@
  */
 
 var { oCONFIG, _updateConfig } = require('../Universal-Federated-Analytics.lib.js');
-var _cleanBooleanParam = jest.fn().mockReturnValue(true);
-var _cleanDimensionValue = jest.fn().mockReturnValue('dimension1');
 
 var default_SCRIPT_SOURCE = oCONFIG.SCRIPT_SOURCE;
 var default_AGENCY = oCONFIG.AGENCY;
@@ -60,6 +58,8 @@ afterEach(() => {
 });
 
 test('_updateConfig: agency only', () => {
+  var _cleanBooleanParam = jest.fn().mockReturnValue(true);
+  var _cleanDimensionValue = jest.fn().mockReturnValue('dimension1');
   document.body.innerHTML =
     '<script type="text/javascript" id="_fed_an_ua_tag" src=" https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=USPS"></script>';
   _updateConfig(_cleanBooleanParam, _cleanDimensionValue);
@@ -68,6 +68,8 @@ test('_updateConfig: agency only', () => {
 });
 
 test('_updateConfig: all params', () => {
+  var _cleanBooleanParam = jest.fn().mockReturnValue(true);
+  var _cleanDimensionValue = jest.fn().mockReturnValue('dimension1');
   document.body.innerHTML =
     '<script type="text/javascript" id="_fed_an_ua_tag" src=" https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=USPS&subagency=PaperBoy&sitetopic=morningPaper&siteplatform=mailDelivery&parallelcd=true&palagencydim=1&palsubagencydim=1&palversiondim=1&paltopicdim=1&palplatformdim=1&palscriptsrcdim=1&palurlprotocoldim=1&palinteractiontypedim=1&cto=60&sp=first,second&exts=first,second&yt=true&autotracker=true&sdor=true&dclink=true&enhlink=true&optout=true&transport=beacon"></script>';
   _updateConfig(_cleanBooleanParam, _cleanDimensionValue);

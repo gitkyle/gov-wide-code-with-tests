@@ -3,13 +3,13 @@
  * This is the only public function that should be called by users. */
 
 var { gas } = require('../Universal-Federated-Analytics.lib.js');
-var _sendPageview = jest.fn();
-var _sendEvent = jest.fn();
-var _cleanBooleanParam = jest.fn();
-var _sendCustomDimensions = jest.fn();
-var _sendCustomMetrics = jest.fn();
 
 test('gas: missing required params', () => {
+  var _sendPageview = jest.fn();
+  var _sendEvent = jest.fn();
+  var _cleanBooleanParam = jest.fn();
+  var _sendCustomDimensions = jest.fn();
+  var _sendCustomMetrics = jest.fn();
   gas();
   expect(_sendPageview.mock.calls.length).toBe(0);
   expect(_sendEvent.mock.calls.length).toBe(0);
@@ -19,6 +19,11 @@ test('gas: missing required params', () => {
 });
 
 test('gas: hitType pageview', () => {
+  var _sendPageview = jest.fn();
+  var _sendEvent = jest.fn();
+  var _cleanBooleanParam = jest.fn();
+  var _sendCustomDimensions = jest.fn();
+  var _sendCustomMetrics = jest.fn();
   gas(
     'command',
     'pageview',
@@ -41,6 +46,11 @@ test('gas: hitType pageview', () => {
 });
 
 test('gas: hitType event', () => {
+  var _sendPageview = jest.fn();
+  var _sendEvent = jest.fn();
+  var _cleanBooleanParam = jest.fn();
+  var _sendCustomDimensions = jest.fn();
+  var _sendCustomMetrics = jest.fn();
   gas(
     'command',
     'event',
@@ -55,7 +65,7 @@ test('gas: hitType event', () => {
     _sendCustomDimensions,
     _sendCustomMetrics
   );
-  expect(_sendPageview.mock.calls.length).toBe(1);
+  expect(_sendPageview.mock.calls.length).toBe(0);
   expect(_sendEvent.mock.calls.length).toBe(1);
   expect(_cleanBooleanParam.mock.calls.length).toBe(1);
   expect(_sendCustomDimensions.mock.calls.length).toBe(0);

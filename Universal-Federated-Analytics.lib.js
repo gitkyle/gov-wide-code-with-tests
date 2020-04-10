@@ -49,21 +49,28 @@ var oCONFIG = {
   ENHANCED_LINK: false,
   OPTOUT_PAGE: false,
   TRANSPORT: 'xhr',
-  PUA_NAME: 'GSA_ENOR'
+  PUA_NAME: 'GSA_ENOR',
 };
+
+var videoArray_fed = new Array();
+var playerArray_fed = new Array();
+var _f25 = false;
+var _f50 = false;
+var _f75 = false;
+var _f95 = false;
 
 /*
  * build GA tracking code
  * according to configurations saved in oConfig
  */
+var tObjectCheck;
 function _initBasicTracker() {
-  var tObjectCheck;
   if (typeof window['GoogleAnalyticsObject'] === 'undefined') {
-    (function(i, s, o, g, r, a, m) {
+    (function (i, s, o, g, r, a, m) {
       i['GoogleAnalyticsObject'] = r;
       (i[r] =
         i[r] ||
-        function() {
+        function () {
           (i[r].q = i[r].q || []).push(arguments);
         }),
         (i[r].l = 1 * new Date());
@@ -370,7 +377,7 @@ function _sendPageview(_virtualPath, _virtualTitle, cTracker) {
       try {
         window[window['GoogleAnalyticsObject']](oCONFIG.PUA_NAME + i + '.send', 'pageview', {
           page: _virtualPath,
-          title: _virtualTitle !== '' || _virtualTitle !== undefined ? _virtualTitle : document.title
+          title: _virtualTitle !== '' || _virtualTitle !== undefined ? _virtualTitle : document.title,
         });
       } catch (err) {
         //console.log(err);
@@ -527,7 +534,7 @@ function createTracker(sendPv, URIHandler) {
     window[window['GoogleAnalyticsObject']]('create', oCONFIG.GWT_UAID[dpv], oCONFIG.COOKIE_DOMAIN, {
       name: oCONFIG.PUA_NAME + dpv,
       allowLinker: true,
-      cookieExpires: parseInt(oCONFIG.COOKIE_TIMEOUT)
+      cookieExpires: parseInt(oCONFIG.COOKIE_TIMEOUT),
     });
     if (oCONFIG.TRANSPORT) {
       window[window['GoogleAnalyticsObject']](oCONFIG.PUA_NAME + dpv + '.set', 'transport', oCONFIG.TRANSPORT);
@@ -757,22 +764,23 @@ function _initIdAssigner() {
  * usage:
  * add event listener to an HTML element
  */
-function _tagClicks(evObj, evCat, evAct, evLbl, evVal) {
+function _tagClicks(evObj, evCat, evAct, evLbl, evVal, sendEvent) {
+  sendEvent = sendEvent || _sendEvent;
   if (evObj.addEventListener) {
-    evObj.addEventListener('mousedown', function() {
+    evObj.addEventListener('mousedown', function () {
       _sendEvent(evCat, evAct, evLbl, evVal, false, 'Mouse Click');
     });
-    evObj.addEventListener('keydown', function(event) {
+    evObj.addEventListener('keydown', function (event) {
       //event.preventDefault();
       if (event.keyCode === 13) {
         _sendEvent(evCat, evAct, evLbl, evVal, false, 'Enter Key Keystroke');
       }
     });
   } else if (evObj.attachEvent) {
-    evObj.attachEvent('onmousedown', function() {
+    evObj.attachEvent('onmousedown', function () {
       _sendEvent(evCat, evAct, evLbl, evVal, false, 'Mouse Click');
     });
-    evObj.attachEvent('onkeydown', function(event) {
+    evObj.attachEvent('onkeydown', function (event) {
       //event.preventDefault();
       if (event.keyCode === 13) {
         _sendEvent(evCat, evAct, evLbl, evVal, false, 'Enter Key Keystroke');
@@ -824,171 +832,171 @@ function _setUpTrackersIfReady() {
 }
 
 /*** Start YouTube Tracking - Used for Youtube video tracking (Play / Pause / Watch to End ***/
-function _setupYtTrackers() {
+function createYouTubeIFrames() {
   if (oCONFIG.YOUTUBE) {
-    var videoArray_fed = new Array();
-    var playerArray_fed = new Array();
-    var _f33 = false;
-    var _f66 = false;
-    var _f90 = false;
-
     var tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    /*
-     * name: youtube_parser_fed
-     * usage: to extract YouTube video id from YouTube URI
-     */
-    var youtube_parser_fed = function youtube_parser_fed(url) {
-      var regExp = /^(https?\:)?(\/\/)?(www\.)?(youtu\.be\/|youtube(\-nocookie)?\.([A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)(watch|embed\/|vi?\/)?(\?vi?\=)?([^#\&\?\/]{11}).*$/;
-      var match = url.match(regExp);
-      if (match && match[9].length === 11) {
-        return match[9];
-      } else {
-      }
-    };
-    /*
-     * name: IsYouTube_fed
-     * usage: to check if the string is a valid YouTube URL
-     */
-    var IsYouTube_fed = function IsYouTube_fed(url) {
-      var YouTubeLink_regEx = /^(https?\:)?(\/\/)?(www\.)?(youtu\.be\/|youtube(\-nocookie)?\.([A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)(watch|embed\/|vi?\/)?(\?vi?\=)?([^#\&\?\/]{11}).*$/;
-      if (YouTubeLink_regEx.test(url.toString())) {
-        return true;
-      } else {
-        return false;
-      }
-    };
-    /*
-     * name: YTUrlHandler_fed
-     * usage: to correct minor errors in YouTube URLs
-     */
-    var YTUrlHandler_fed = function YTUrlHandler_fed(url) {
-      url = url.replace(
-        /origin\=(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})\&?/gi,
-        'origin=' + document.location.protocol + '//' + document.location.host
-      );
-      stAdd = '';
-      adFlag = false;
-      if (url.indexOf('https') === -1) {
-        url = url.replace('http', 'https');
-      }
-      if (url.indexOf('?') === -1) {
-        stAdd = '?flag=1';
-      }
-      if (url.indexOf('enablejsapi') === -1) {
-        stAdd += '&enablejsapi=1';
-        adFlag = true;
-      }
-      if (url.indexOf('html5') === -1) {
-        stAdd += '&html5=1';
-        adFlag = true;
-      }
-      if (url.indexOf('origin') === -1) {
-        stAdd += '&origin=' + document.location.protocol + '//' + document.location.host;
-        adFlag = true;
-      }
-      if (adFlag === true) {
-        return url + stAdd;
-      } else {
-        return url;
-      }
-    };
-    /*
-     * name: _initYouTubeTracker
-     * usage: initiate YouTube tracker libraries and loop over all YouTube iframes
-     */
-    var _initYouTubeTracker = function() {
-      var _iframes = document.getElementsByTagName('iframe');
-      var vArray = 0;
-      for (var ytifrm = 0; ytifrm < _iframes.length; ytifrm++) {
-        _thisVideoObj = _iframes[ytifrm];
-        var _thisSrc = _thisVideoObj.src;
-        if (IsYouTube_fed(_thisSrc)) {
-          _thisVideoObj.src = YTUrlHandler_fed(_thisSrc);
-          var youtubeid = youtube_parser_fed(_thisSrc);
-          _thisVideoObj.setAttribute('id', youtubeid);
-          videoArray_fed[vArray] = youtubeid;
-          vArray++;
-        }
-      }
-    };
+
     /*
      * name: onYouTubeIframeAPIReady
      * usage: to assign video array items to player array of YouTube Tracker API
      */
-    var onYouTubePlayerAPIReady = function() {
+    window.onYouTubePlayerAPIReady = function () {
       for (var i = 0; i < videoArray_fed.length; i++) {
-        playerArray_fed[i] = new YT.Player(videoArray_fed[i], {
+        playerArray_fed[i] = new window.YT.Player(videoArray_fed[i], {
           events: {
             onReady: onFedPlayerReady,
-            onStateChange: onFedPlayerStateChange
-          }
+            onStateChange: onFedPlayerStateChange,
+          },
         });
       }
     };
+  }
+}
 
-    /*
-     * name: onPlayerReady
-     * usage: fired when the player is ready
-     * function added for compatibility of YouTube tracker API
-     */
-    var onFedPlayerReady = function onFedPlayerReady(event) {
-      /* left blank on purpose */
-    };
-    /*
-     * name: onPlayerStateChange
-     * usage: fired when user interacts with the video player
-     * such as pressing play/pause buttons
-     * and sends proper Events to GA
-     */
-    var onFedPlayerStateChange = function onFedPlayerStateChange(event) {
-      var videoURL = event.target.getIframe().getAttribute('src');
-      var videoId = youtube_parser_fed(videoURL);
-      _thisDuration = (
+/*
+ * name: _initYouTubeTracker
+ * usage: initiate YouTube tracker libraries and loop over all YouTube iframes
+ */
+function _initYouTubeTracker() {
+  var _iframes = document.getElementsByTagName('iframe');
+  var vArray = 0;
+  for (var ytifrm = 0; ytifrm < _iframes.length; ytifrm++) {
+    _thisVideoObj = _iframes[ytifrm];
+    var _thisSrc = _thisVideoObj.src;
+    if (IsYouTube_fed(_thisSrc)) {
+      _thisVideoObj.src = YTUrlHandler_fed(_thisSrc);
+      var youtubeid = youtube_parser_fed(_thisSrc);
+      _thisVideoObj.setAttribute('id', youtubeid);
+      videoArray_fed[vArray] = youtubeid;
+      vArray++;
+    }
+  }
+}
+
+/*
+ * name: onPlayerReady
+ * usage: fired when the player is ready
+ * function added for compatibility of YouTube tracker API
+ */
+function onFedPlayerReady(event) {
+  /* left blank on purpose */
+}
+
+/*
+ * name: onFedPlayerStateChange
+ * usage: fired when user interacts with the video player
+ * such as pressing play/pause buttons
+ * and sends proper Events to GA
+ */
+function onFedPlayerStateChange(event, sendEvent) {
+  sendEvent = sendEvent || _sendEvent;
+  var videoURL = event.target.getIframe().getAttribute('src');
+  // var videoId = youtube_parser_fed(videoURL);
+  // _thisDuration = parseInt(
+  //   ((parseInt(event.target.getCurrentTime()) / parseInt(event.target.getDuration())) * 100).toFixed()
+  // );
+  if (typeof onPlayerStateChange !== 'undefined') {
+    onPlayerStateChange(event);
+  }
+  if (parseInt(event.data) === parseInt(YT.PlayerState.PLAYING) && parseInt(event.target.getCurrentTime()) === 0) {
+    _f25 = false;
+    _f50 = false;
+    _f75 = false;
+    _f95 = false;
+    sendEvent('YouTube Video', 'play', videoURL, 0);
+    setInterval(function () {
+      var percentage = (
         (parseInt(event.target.getCurrentTime()) / parseInt(event.target.getDuration())) *
         100
       ).toFixed();
-      if (typeof onPlayerStateChange !== 'undefined') {
-        onPlayerStateChange(event);
+      if (percentage < 100) {
+        if (percentage > 25 && percentage <= 50 && _f25 == false) {
+          _f25 = true;
+          sendEvent('YouTube Video', '25%', videoURL, 0);
+        }
+        if (percentage > 50 && percentage <= 75 && _f50 == false) {
+          _f50 = true;
+          sendEvent('YouTube Video', '50%', videoURL, 0);
+        }
+        if (percentage > 75 && percentage <= 95 && _f75 == false) {
+          _f75 = true;
+          sendEvent('YouTube Video', '75%', videoURL, 0);
+        }
+        if (percentage > 95 && percentage <= 99 && _f95 == false) {
+          _f95 = true;
+          sendEvent('YouTube Video', '95%', videoURL, 0);
+        }
       }
-      if (parseInt(event.data) === parseInt(YT.PlayerState.PLAYING) && _thisDuration === 0) {
-        _f25 = false;
-        _f50 = false;
-        _f75 = false;
-        _f95 = false;
-        _sendEvent('YouTube Video', 'play', videoURL, 0);
-        setInterval(function() {
-          var percentage = (
-            (parseInt(event.target.getCurrentTime()) / parseInt(event.target.getDuration())) *
-            100
-          ).toFixed();
-          if (percentage < 100) {
-            if (percentage > 25 && percentage <= 50 && _f25 == false) {
-              _f25 = true;
-              _sendEvent('YouTube Video', '25%', videoURL, 0);
-            }
-            if (percentage > 50 && percentage <= 75 && _f50 == false) {
-              _f50 = true;
-              _sendEvent('YouTube Video', '50%', videoURL, 0);
-            }
-            if (percentage > 75 && percentage <= 95 && _f75 == false) {
-              _f75 = true;
-              _sendEvent('YouTube Video', '75%', videoURL, 0);
-            }
-            if (percentage > 95 && percentage <= 99 && _f95 == false) {
-              _f95 = true;
-              _sendEvent('YouTube Video', '95%', videoURL, 0);
-            }
-          }
-        }, parseInt(event.target.getDuration()) / 10);
-      } else if (event.data === YT.PlayerState.ENDED) {
-        _sendEvent('YouTube Video', 'finish', videoURL, 0);
-      } else if (event.data === YT.PlayerState.PAUSED) {
-        _sendEvent('YouTube Video', 'pause', videoURL, 0);
-      }
-    };
+    }, (parseInt(event.target.getDuration()) / 100) * 1000);
+  } else if (event.data === YT.PlayerState.ENDED) {
+    sendEvent('YouTube Video', 'finish', videoURL, 0);
+  } else if (event.data === YT.PlayerState.PAUSED) {
+    sendEvent('YouTube Video', 'pause', videoURL, 0);
+  }
+}
+
+/*
+ * name: youtube_parser_fed
+ * usage: to extract YouTube video id from YouTube URI
+ */
+function youtube_parser_fed(url) {
+  var regExp = /^(https?\:)?(\/\/)?(www\.)?(youtu\.be\/|youtube(\-nocookie)?\.([A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)(watch|embed\/|vi?\/)?(\?vi?\=)?([^#\&\?\/]{11}).*$/;
+  var match = url.match(regExp);
+  if (match && match[9].length === 11) {
+    return match[9];
+  } else {
+  }
+}
+
+/*
+ * name: IsYouTube_fed
+ * usage: to check if the string is a valid YouTube URL
+ */
+function IsYouTube_fed(url) {
+  var YouTubeLink_regEx = /^(https?\:)?(\/\/)?(www\.)?(youtu\.be\/|youtube(\-nocookie)?\.([A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)(watch|embed\/|vi?\/)?(\?vi?\=)?([^#\&\?\/]{11}).*$/;
+  if (YouTubeLink_regEx.test(url.toString())) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/*
+ * name: YTUrlHandler_fed
+ * usage: to correct minor errors in YouTube URLs
+ */
+function YTUrlHandler_fed(url) {
+  url = url.replace(
+    /origin\=(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})\&?/gi,
+    'origin=' + document.location.protocol + '//' + document.location.host
+  );
+  stAdd = '';
+  adFlag = false;
+  if (url.indexOf('https') === -1) {
+    url = url.replace('http', 'https');
+  }
+  if (url.indexOf('?') === -1) {
+    stAdd = '?flag=1';
+  }
+  if (url.indexOf('enablejsapi') === -1) {
+    stAdd += '&enablejsapi=1';
+    adFlag = true;
+  }
+  if (url.indexOf('html5') === -1) {
+    stAdd += '&html5=1';
+    adFlag = true;
+  }
+  if (url.indexOf('origin') === -1) {
+    stAdd += '&origin=' + document.location.protocol + '//' + document.location.host;
+    adFlag = true;
+  }
+  if (adFlag === true) {
+    return url + stAdd;
+  } else {
+    return url;
   }
 }
 
@@ -1008,7 +1016,14 @@ module.exports = {
   _URIHandler,
   _isExcludedReferrer,
   createTracker,
-  _setupYtTrackers,
   initTrackers,
-  _initAutoTracker
+  _initAutoTracker,
+  _initBasicTracker,
+  createYouTubeIFrames,
+  _initIdAssigner,
+  _tagClicks,
+  onFedPlayerStateChange,
+  YTUrlHandler_fed,
+  IsYouTube_fed,
+  youtube_parser_fed,
 };
