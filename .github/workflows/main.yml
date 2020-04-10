@@ -1,6 +1,6 @@
-name: Unit Tests
+name: Build and run unit tests
 
-on: [push]
+on: [pull_request]
 
 jobs:
   build:
@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [12.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -17,11 +17,23 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: install dependencies
+    - name: Install dependencies
       run: npm install
-    - name: build single file script
+    - name: Build single script
       run: npm run build
-    - name: run tests
+    - name: Minify
+      run: npm run minify
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "Adding changes from CI" -a  || echo "Nothing to update"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.head_ref }}
+    - name: Run unit tests
       run: npm test
     
       env:
