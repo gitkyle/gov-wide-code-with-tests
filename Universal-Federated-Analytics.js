@@ -123,7 +123,7 @@ function _defineCookieDomain() {
       oCONFIG.COOKIE_DOMAIN = location.hostname.match(
         /(([^.\/]+\.[^.\/]{2,3}\.[^.\/]{2})|(([^.\/]+\.)[^.\/]{2,4}))(\/.*)?$/
       )[1];
-      oCONFIG.SUBDOMAIN_BASED = true;
+      oCONFIG.SUBDOMAIN_BASED = false;
     } else {
       oCONFIG.COOKIE_DOMAIN = location.hostname.toLowerCase().replace('www.', '');
       oCONFIG.SUBDOMAIN_BASED = false;
