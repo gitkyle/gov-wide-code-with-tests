@@ -1,5 +1,5 @@
 /*
- * oConfig holds all settings with default values.
+ * oConfig holds all settings with default values
  * Most of the settings can be changed by passing a new value
  * in the query string when referencing this file.
  */
