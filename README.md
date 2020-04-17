@@ -1,4 +1,5 @@
-![Node CI](https://github.com/gitkyle/gov-wide-code/workflows/Node%20CI/badge.svg?branch=master)
+
+![Build and run unit tests](https://github.com/gitkyle/gov-wide-code-with-tests/workflows/Build%20and%20run%20unit%20tests/badge.svg)
 
 ## Digital Analytics Program government-wide code
 
@@ -19,7 +20,7 @@ Agencies are encouraged to use the following HTML snippet to participate in the 
 
 ```html
 <!-- We participate in the US government's analytics program. See the data at analytics.usa.gov. -->
-<script async type="text/javascript" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=AGENCY" id="_fed_an_ua_tag"></script>
+<script async type="text/javascript" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=AGENCY" id="_fed_an_ua_tag"></script>
 ```
 
 Replace `AGENCY` with your agency's standard abbreviation, such as DHS or EPA.
@@ -93,3 +94,13 @@ This repository is maintained in its own GitHub organization, `digital-analytics
 Only Digital Analytics Program staff have been granted write access to this repository.
 
 **All members of the digital-analytics-program GitHub organization are required to have two-factor authentication enabled.**
+
+#### Unit Testing
+
+The Digital Analytics Program Javascript code is tested using the [Jest](https://jestjs.io/) testing framework.
+
+All tests are located inside the [\_\_tests\_\_](__tests__) subdirectory and follow the `[function name].test.js` naming convention.
+
+Unit tests are executed by GitHub Actions upon pull request. The CI configuration can be found at [.github/workflows/main.yml](.github/workflows/main.yml).
+
+Before the tests are executed, the `Universal-Federated-Analytics.js` script is compiled from `Universal-Federated-Analytics-base.js` and `Universal-Federated-Analytics-lib.js`. Any proposed changes should be made against these two files and not to `Universal-Federated-Analytics.js`.
