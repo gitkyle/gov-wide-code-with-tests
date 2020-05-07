@@ -10,7 +10,7 @@ var oCONFIG = {
 
   AGENCY: '',
   SUB_AGENCY: '',
-  VERSION: '20200416 v5.0 - Universal Analytics',
+  VERSION: '20200416 v5.01 - Universal Analytics',
   SITE_TOPIC: '',
   SITE_PLATFORM: '',
   SCRIPT_SOURCE: '',
