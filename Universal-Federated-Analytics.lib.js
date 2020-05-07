@@ -3,6 +3,9 @@
  * Most of the settings can be changed by passing a new value
  * in the query string when referencing this file.
  */
+
+var x = 1;
+
 var oCONFIG = {
   GWT_UAID: ['UA-33523145-1'] /* hard coded cannot be configured by query string */,
   FORCE_SSL: true /* hard coded cannot be configured by query string */,
