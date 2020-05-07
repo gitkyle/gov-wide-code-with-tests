@@ -6,28 +6,26 @@ on:
 
 jobs:
   test-and-build:
-
+    if: github.event.issue.comment.body == "run tests" && github.event.issue.comment.author == "gitkyle"
+    
     runs-on: ubuntu-latest
-
+    
     strategy:
       matrix:
         node-version: [12.x]
-
+    
     steps:
-      - name: run-ci
-        if: github.event.issue.comment.body == "run tests" && github.event.issue.comment.author == "gitkyle"
-        run:
-        - uses: actions/checkout@master
-          with:
-            ref: ${{ github.event.pull_request.head.ref }}
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v1
-          with:
-            node-version: ${{ matrix.node-version }}
-        - name: Install dependencies
-          run: npm install
-        - name: Run unit tests
-          run: npm test
+    - uses: actions/checkout@master
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install dependencies
+      run: npm install
+    - name: Run unit tests
+      run: npm test
     - name: Build single script
       run: npm run build
     - name: Minify
