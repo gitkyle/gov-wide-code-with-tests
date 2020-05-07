@@ -1,6 +1,6 @@
 name: Build and run unit tests
 
-on: [push,pull_request]
+on: [pull_request]
 
 jobs:
   build:
@@ -19,22 +19,17 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install dependencies
       run: npm install
+    - name: Run unit tests
+      run: npm test
     - name: Build single script
       run: npm run build
     - name: Minify
       run: npm run minify
-    - name: Commit files
+    - name: Commit bundled and minified files
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git commit -m "Adding changes from CI" -a  || echo "Nothing to update"
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.head_ref }}
-    - name: Run unit tests
-      run: npm test
     
       env:
         CI: true
