@@ -1,6 +1,8 @@
 name: Run tests and build external scripts
 
-on: [pull_request]
+on:
+  issue_comment:
+    types: [created]
 
 jobs:
   test-and-build:
@@ -13,6 +15,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
+      if: github.event.issue.comment.body == "run tests" && github.event.issue.comment.author == "gitkyle"
       with:
         ref: ${{ github.event.pull_request.head.ref }}
     - name: Use Node.js ${{ matrix.node-version }}
