@@ -12,7 +12,7 @@ jobs:
         node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -26,10 +26,12 @@ jobs:
     - name: Minify
       run: npm run minify
     - name: Commit bundled and minified files
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git commit -m "Adding changes from CI" -a  || echo "Nothing to update"
+      run: git commit -m "Adding changes from CI" -a  || echo "Nothing to update"
+    - name: Push changes to branch that initiated PR
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.head_ref }}
     
       env:
         CI: true
