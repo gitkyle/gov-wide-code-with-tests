@@ -1,6 +1,6 @@
 name: Build and run unit tests
 
-on: [pull_request]
+on: [pull_request,push]
 
 jobs:
   test-and-build:
