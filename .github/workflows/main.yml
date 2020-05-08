@@ -13,7 +13,7 @@ jobs:
       matrix:
         node-version: [12.x]
     
-    if: github.event.issue.comment.body == 'run tests' && github.event.issue.comment.author == github.repository_owner
+    if: github.event.issue.body == 'run tests' && github.event.issue.comment.author == github.repository_owner
     
     steps:
     - uses: actions/checkout@master
