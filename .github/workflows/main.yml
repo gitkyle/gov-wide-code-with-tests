@@ -2,17 +2,18 @@ name: Run tests and build external scripts
 
 on:
   issue_comment:
-    types: [created]
+    types:
+      - created
 
 jobs:
-  test-and-build:
-    if: github.event.issue.comment.body == 'run tests' && github.event.issue.comment.author == github.event.issue.comment.owner
-    
+  test_and_build:
     runs-on: ubuntu-latest
     
     strategy:
       matrix:
         node-version: [12.x]
+    
+    if: github.event.issue.comment.body == 'run tests' && github.event.issue.comment.author == github.event.issue.comment.owner
     
     steps:
     - uses: actions/checkout@master
