@@ -6,7 +6,7 @@ on:
 
 jobs:
   test-and-build:
-    if: github.event.issue.comment.body == 'run tests' && github.event.issue.comment.author == 'gitkyle'
+    if: github.event.issue.comment.body == 'run tests' && github.event.issue.comment.author == github.event.issue.comment.owner
     
     runs-on: ubuntu-latest
     
