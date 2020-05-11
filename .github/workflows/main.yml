@@ -1,9 +1,7 @@
 name: Run tests and build external scripts
 
 on:
-  push:
-    tags:
-      - 'run CI'
+  pull_request:
 
 jobs:
   test_and_build:
