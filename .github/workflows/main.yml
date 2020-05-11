@@ -1,9 +1,9 @@
-name: Unit Tests
+name: Test
 
 on: [pull_request, push]
 
 jobs:
-  run_tests:
+  run:
     runs-on: ubuntu-latest
     
     strategy:
