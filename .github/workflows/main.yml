@@ -1,9 +1,9 @@
 name: Run tests and build external scripts
 
 on:
-  issue_comment:
-    types:
-      - created
+  push:
+    tags:
+      - 'run CI'
 
 jobs:
   test_and_build:
@@ -12,8 +12,6 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-    
-    if: github.event.issue.body == 'run tests' && github.event.issue.comment.author == github.repository_owner
     
     steps:
     - uses: actions/checkout@master
