@@ -30,7 +30,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git commit -m "Add bundled and minified files from CI" -a  || echo "Nothing to update"
-    - name: Push changes to branch that initiated PR
+    - name: Push changes to master branch
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
